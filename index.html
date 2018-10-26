@@ -69,8 +69,8 @@
         tab.push(data7);
         var data8 = [
             [-10, -10],
-            [-10, -10],
-            [-10, -10]
+            [-10, -3],
+            [-3, -3]
         ];
         tab.push(data8);
 
@@ -80,20 +80,21 @@
                 lastNum = value;
             }
         }
-        if(a === 5){
+        if(a === 5 || a === 7){
             if(value === 1){
                 if(isEven === 1){
                     value = 0;
                 }else{
                     value = 2;
                 }
-                if(b === 1){
+                if(b === 1 && a === 7){
                     isEven = (isEven + 1) % 2;
                 }
             }else{
                 value = 1;
             }
         }
+
 
 
         return tab[a][value][b] - a * 20;
@@ -108,7 +109,6 @@
                 chart:{
                     events: {
                         load: function () {
-
                             var series = this.series;
                             setInterval(function () {
                                 if(flag === 1){
