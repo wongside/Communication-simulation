@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数字基带信号模拟</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/highcharts.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <h1 align="center">简单传输码模拟</h1>
+    <div id="table" style="width: 100%; height:650px;"></div>
+    <br/>
+    <div align="center">
+        <input title="" id="in" type="text" class="form-control" oninput="" style="width: 80%">
+    </div>
+    <div id="show"></div>
+</div>
+<script language="JavaScript">
+
+    var datain;
+    var flag = 0;
+    var lastNum = 0;
+    var isEven = 0;
+
+
+    function coder(a, b) {
+        var value = datain.charAt(datain.length-1) - '0';
+        var tab  = [];
+        var data1 = [
+            [-10, -10],
+            [-3, -3]
+        ];
+        tab.push(data1);
+        var data2 = [
+            [-17, -17],
+            [-3, -3],
+            [0,0]
+        ];
+        tab.push(data2);
+        var data3 = [
+            [-10, -10],
+            [-3, -10]
+        ];
+        tab.push(data3);
+        var data4 = [
+            [-17, -10],
+            [-3, -10]
+        ];
+        tab.push(data4);
+        var data5 = [
+            [-10, -10],
+            [-3, -3]
+        ];
+        tab.push(data5);
+        var data6 = [
+            [-17, -10],
+            [-10, -10],
+            [-3, -10]
+        ];
+        tab.push(data6);
+        var data7 = [
+            [-10, -10],
+            [-10, -10],
+            [-10, -10]
+        ];
+        tab.push(data7);
+        var data8 = [
+            [-10, -10],
+            [-10, -10],
+            [-10, -10]
+        ];
+        tab.push(data8);
+
+        if(a === 4){
+            value = (value + lastNum) % 2;
+            if(b === 1){
+                lastNum = value;
+            }
+        }
+        if(a === 5){
+            if(value === 1){
+                if(isEven === 1){
+                    value = 0;
+                }else{
+                    value = 2;
+                }
+                if(b === 1){
+                    isEven = (isEven + 1) % 2;
+                }
+            }else{
+                value = 1;
+            }
+        }
+
+
+        return tab[a][value][b] - a * 20;
+    }
+
+    $(document).ready(function () {
+
+        var chart = Highcharts.chart('table', {
+                title: {
+                    text: ''
+                },
+                chart:{
+                    events: {
+                        load: function () {
+
+                            var series = this.series;
+                            setInterval(function () {
+                                if(flag === 1){
+                                    for(var i = 0; i < series.length; i++){
+                                        for(var j = 0; j < 2; j++){
+                                            var data = coder(i, j);
+                                            series[i].addPoint([(datain.length * 2 + j)*10+380, data],true,true);
+                                        }
+                                    }
+                                    console.log(isEven);
+                                    flag = 0;
+                                }
+                            }, 200);
+                        }
+                    }
+                },
+                xAxis: {
+                    title: {
+                        text: ''
+                    },
+                    labels:{
+                        enabled: false
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: ''
+                    },
+                    labels:{
+                        enabled: false
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        marker: {
+                            enabled: false
+                        },
+                        label: {
+                            connectorAllowed: false
+                        }
+                    }
+                },
+                series: [
+                    {
+                        name: "单极性不归零（NRZ）码",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -10
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "双极性不归零（NRZ）码",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -30
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "单极性归零码（RZ） ",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -50
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "双极性归零码（RZ） ",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -70
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "差分码",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -90
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "AMI码",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -110
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "HDB3码",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -130
+                                })
+                            }
+                            return data;
+                        }())
+                    },
+                    {
+                        name: "CMI码",
+                        step: 'center',
+                        data: (function () {
+                            var data = [], i;
+                            for (i = 0; i < 40; i++) {
+                                data.push({
+                                    x: i * 10,
+                                    y: -150
+                                })
+                            }
+                            return data;
+                        }())
+                    }
+                ],
+                credits: {
+                    enabled: false // 禁用版权信息
+                },
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500
+                        },
+                        chartOptions: {
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            }
+                        }
+                    }]
+                }
+            });
+
+        var input = document.getElementById("in");
+        input.oninput = function () {
+            datain = input.value;
+            flag = 1;
+            // var show = document.getElementById("show");
+            // show.innerHTML = 'flag:' + flag + '------value:' + value + '-----count:' + count;
+        };
+        }
+    );
+
+</script>
+</body>
+</html>
