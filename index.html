@@ -24,7 +24,11 @@
     var flag = 0;
     var lastNum = 0;
     var isEven = 0;
+    var hdb3v = 2;
 
+    function hdb3(){
+
+    }
 
     function coder(a, b) {
         var value = datain.charAt(datain.length-1) - '0';
@@ -62,9 +66,9 @@
         ];
         tab.push(data6);
         var data7 = [
+            [-17, -10],
             [-10, -10],
-            [-10, -10],
-            [-10, -10]
+            [-3, -10]
         ];
         tab.push(data7);
         var data8 = [
@@ -94,7 +98,33 @@
                 value = 1;
             }
         }
+        if(a === 6){
+            if(value === 1){
+                if(isEven === 1){
+                    value = 0;
+                }else{
+                    value = 2;
+                }
+                if(b === 1 && a === 7){
+                    isEven = (isEven + 1) % 2;
+                }
+            }else{
+                console.log(datain.substring(datain.length - 4));
+                if(datain.length > 3 && datain.substring(datain.length - 4) === "0000"){
+                    value = hdb3v;
+                    if(b === 1){
+                        if(hdb3v === 2){
+                            hdb3v = 0;
+                        }else{
+                            hdb3v = 2;
+                        }
+                    }
+                }else{
+                    value = 1;
+                }
 
+            }
+        }
 
 
         return tab[a][value][b] - a * 20;
@@ -106,6 +136,7 @@
                 title: {
                     text: ''
                 },
+
                 chart:{
                     events: {
                         load: function () {
@@ -113,12 +144,20 @@
                             setInterval(function () {
                                 if(flag === 1){
                                     for(var i = 0; i < series.length; i++){
-                                        for(var j = 0; j < 2; j++){
-                                            var data = coder(i, j);
-                                            series[i].addPoint([(datain.length * 2 + j)*10+380, data],true,true);
-                                        }
+                                        // if(i === 6){
+                                        //     var data = hdb3();
+                                        //     for(var j = 0; j < data[0]; j++){
+                                        //         series[i].addPoint([(datain.length * 2 + j)*10+380, data],true,true);
+                                        //     }
+                                        // }else{
+                                            for(var j = 0; j < 2; j++){
+                                                var data = coder(i, j);
+                                                series[i].addPoint([(datain.length * 2 + j)*10+380, data],true,true);
+                                            }
+                                        // }
+
                                     }
-                                    console.log(isEven);
+                                    // console.log(isEven);
                                     flag = 0;
                                 }
                             }, 200);
@@ -267,6 +306,9 @@
                 ],
                 credits: {
                     enabled: false // 禁用版权信息
+                },
+                tooltip:{
+                    enabled: false
                 },
                 responsive: {
                     rules: [{
